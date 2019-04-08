@@ -1,74 +1,64 @@
 package jungol;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
-  
+ 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+ 
 public class Main1863 {
-    static int nV;
-    static int nE;
-    static ArrayList<ArrayList<Integer>> adj;
-    static boolean isvisited[];
-    static int cont;
-    public static void main(String[] args) {
-        Scanner input=new Scanner(System.in);
-  
-        nV=input.nextInt();
-        nE=input.nextInt();
-        adj=new ArrayList<ArrayList<Integer>>();
-        isvisited=new boolean[nV];
-        for(int i=0; i<=nV; i++)
-            adj.add(new ArrayList<Integer>());
-        for(int i=0; i<nV; i++)
-            isvisited[i]=false;
-        for(int i=0; i<nE; i++)
-        {
-            int t1=input.nextInt();
-            int t2=input.nextInt();
-  
-            adj.get(t1).add(t2);
-            adj.get(t2).add(t1);
+    static int n, m;
+    static int[] map;
+    static int cnt;
+     
+    public static void makeSet(int x) {
+        map[x] = x;
+    }
+     
+    public static int findSet(int x) {
+        if ( x == map[x] ) 
+            return x;
+        else {
+            map[x] = findSet(map[x]); 
+            return map[x];
         }
-  
-        int k=1;
-  
-        // 1부터 탐색시작
-  
-        for(int i=0; i<isvisited.length; i++)
-        {
-            if(isvisited[i]==false)
-            {
-                bfs(i+1);
-                cont++;
-            }
-  
+    }
+     
+    public static void union(int x, int y) {
+        int px = findSet(x); 
+        int py = findSet(y);
+         
+        if (px != py) { 
+            map[py] = px;
+            cnt--;
+        }
+     
+    }
+     
+    public static void main(String[] args) throws Exception {
+         
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+         
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+         
+        map = new int[n+1];
+         
+        cnt = n;
+         
+        for (int i = 0; i < map.length; i++) {
+            makeSet(i);
         }
          
-        System.out.println(cont);
-  
-  
-    }
-  
-    public static void bfs(int n)
-    {
-        Queue<Integer> q=new LinkedList<Integer>();
-        q.offer(n);
-         
-        while(!q.isEmpty())
-        {
-            int t=q.poll();
-  
-            for(int i=0; i<adj.get(t).size(); i++)
-            {
-                if(isvisited[adj.get(t).get(i)-1]==false )
-                {
-                    isvisited[adj.get(t).get(i)-1]=true;
-                    q.offer(adj.get(t).get(i));
-                }
-            }
-  
+        for (int i = 0; i < m; i++) {
+            st = new StringTokenizer(br.readLine(), " ");
+             
+            int s1 = Integer.parseInt(st.nextToken());
+            int s2 = Integer.parseInt(st.nextToken());
+             
+            union(s1, s2);
         }
-  
+         
+        System.out.println(cnt);
     }
+     
 }
